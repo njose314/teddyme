@@ -1,1 +1,323 @@
-h
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Teddy's Anatomy | Pastel Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,500;1,800&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* YOUR NEW PALETTE */
+            --white: #ffffff;
+            --light-blue: #b0ddee;
+            --ash-grey: #c6d4c0;
+            --petal-frost: #f6dde6;
+            --desert-sand: #e8c7b1;
+            --desert-sand-2: #ddb095;
+            
+            /* Additional for contrast */
+            --cocoa-text: #5c4033; 
+            --love-red: #ff6b6b;
+        }
+
+        * { box-sizing: border-box; touch-action: none; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            /* Soft Gradient Background */
+            background: radial-gradient(circle at 50% 30%, var(--white), var(--light-blue));
+            color: var(--cocoa-text);
+            font-family: 'Montserrat', sans-serif; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        }
+
+        /* --- BACKGROUND PARTICLES --- */
+        #sky-layer {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+        
+        .petal {
+            position: absolute; background: var(--petal-frost);
+            border-radius: 50%; opacity: 0.6;
+            animation: floatDown linear infinite;
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+        @keyframes floatDown {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- UI TYPOGRAPHY --- */
+        h1 {
+            margin-top: 50px;
+            font-family: 'Bodoni Moda'; font-style: italic; font-size: 2.5rem;
+            color: var(--desert-sand-2);
+            text-shadow: 2px 2px 0px var(--white);
+            margin-bottom: 5px; z-index: 10; text-align: center;
+            animation: floatText 3s ease-in-out infinite;
+        }
+        @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        p.subtitle {
+            color: var(--cocoa-text); font-size: 0.75rem; letter-spacing: 3px;
+            margin-bottom: 10px; z-index: 10; text-transform: uppercase; font-weight: 600;
+            opacity: 0.7;
+        }
+
+        /* --- BEAR CONTAINER --- */
+        #bear-wrapper {
+            position: relative; 
+            width: 340px; 
+            height: 400px; /* Adjusted aspect ratio */
+            z-index: 5;
+            margin-top: 40px;
+
+            /* YOUR HOSTED IMAGE */
+            background-image: url('https://iili.io/fpgcSl2.md.png');
+            
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            background-size: contain;
+            
+            /* Soft shadow instead of harsh drop shadow */
+            filter: drop-shadow(0 10px 15px rgba(176, 221, 238, 0.6));
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* --- CHAT BUBBLE (The "Pop" UI) --- */
+        #chat-bubble {
+            position: absolute;
+            top: -40px; left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--desert-sand);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(221, 176, 149, 0.3);
+            
+            opacity: 0; pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #chat-bubble.visible {
+            opacity: 1;
+            top: -160px; /* Float up */
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* Bubble Tail */
+        #chat-bubble::after {
+            content: ''; position: absolute; bottom: -10px; left: 50%; margin-left: -10px;
+            border-width: 10px; border-style: solid;
+            border-color: var(--white) transparent transparent transparent;
+        }
+        /* Bubble Border Tail Outline */
+        #chat-bubble::before {
+            content: ''; position: absolute; bottom: -13px; left: 50%; margin-left: -10px;
+            border-width: 10px; border-style: solid;
+            border-color: var(--desert-sand) transparent transparent transparent;
+            z-index: -1;
+        }
+
+        .bubble-title {
+            color: var(--desert-sand-2); font-family: 'Bodoni Moda'; font-size: 1.1rem; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;
+        }
+
+        .bubble-text {
+            font-family: 'Montserrat'; font-size: 0.9rem; line-height: 1.5; color: var(--cocoa-text); font-weight: 500;
+        }
+
+        /* --- HIT ZONES --- */
+        .zone {
+            position: absolute; border-radius: 50%; cursor: pointer; z-index: 20;
+            background: transparent;
+            /* border: 1px solid rgba(0,0,0,0.2); /* Uncomment to see touch zones */
+        }
+
+        /* --- COORDINATES (Mapped to your specific bear image) --- */
+        #z-forehead { width: 14%; height: 8%; top: 18%; left: 43%; }
+        #z-eye-l { width: 10%; height: 8%; top: 28%; left: 32%; }
+        #z-eye-r { width: 10%; height: 8%; top: 28%; left: 58%; }
+        #z-nose { width: 12%; height: 8%; top: 35%; left: 44%; }
+        #z-lips { width: 10%; height: 6%; top: 43%; left: 45%; }
+        
+        #z-neck { width: 20%; height: 6%; top: 48%; left: 40%; }
+        #z-heart { width: 12%; height: 10%; top: 55%; left: 35%; } /* Left Chest */
+        #z-belly { width: 15%; height: 12%; top: 62%; left: 42.5%; }
+        
+        #z-hand-l { width: 12%; height: 12%; top: 55%; left: 12%; }
+        #z-hand-r { width: 12%; height: 12%; top: 55%; left: 76%; }
+        
+        #z-hip-l { width: 10%; height: 10%; top: 72%; left: 28%; }
+        #z-hip-r { width: 10%; height: 10%; top: 72%; left: 62%; }
+        
+        #z-toe-l { width: 12%; height: 10%; top: 82%; left: 20%; }
+        #z-toe-r { width: 12%; height: 10%; top: 82%; left: 68%; }
+
+        #z-secret { width: 14%; height: 10%; top: 78%; left: 43%; } /* Crotch */
+
+        /* --- INTERACTION FX --- */
+        .pulse-effect {
+            position: absolute; border-radius: 50%;
+            background: rgba(246, 221, 230, 0.6); /* Petal Frost */
+            box-shadow: 0 0 10px var(--desert-sand-2);
+            pointer-events: none; animation: ripple 0.6s ease-out forwards;
+        }
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* --- WIN OVERLAY --- */
+        #win-overlay {
+            position: fixed; inset: 0; background: rgba(255,255,255,0.95);
+            z-index: 1000; display: none; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            opacity: 0; transition: opacity 1s;
+        }
+        #win-overlay.show { opacity: 1; }
+        
+        .win-title {
+            font-family: 'Bodoni Moda'; font-size: 3rem; color: var(--desert-sand-2); margin-bottom: 20px;
+        }
+        .win-sub {
+            font-size: 1.2rem; color: var(--cocoa-text); max-width: 80%; line-height: 1.6;
+        }
+        .win-btn {
+            margin-top: 30px; padding: 15px 40px; background: var(--light-blue);
+            color: var(--cocoa-text); font-weight: bold; border: none; border-radius: 50px;
+            font-size: 1rem; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: pulseBtn 2s infinite;
+        }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="sky-layer"></div>
+
+    <h1>Teddy's Anatomy</h1>
+    <p class="subtitle">FIND ALL 11 ZONES...</p>
+
+    <div id="bear-wrapper">
+        <div id="chat-bubble">
+            <span id="sb-title" class="bubble-title"></span>
+            <span id="sb-text" class="bubble-text"></span>
+        </div>
+
+        <div class="zone" id="z-forehead" onclick="handleTap('forehead', event)"></div>
+        <div class="zone" id="z-eye-l" onclick="handleTap('eyes', event)"></div>
+        <div class="zone" id="z-eye-r" onclick="handleTap('eyes', event)"></div>
+        <div class="zone" id="z-nose" onclick="handleTap('nose', event)"></div>
+        <div class="zone" id="z-lips" onclick="handleTap('lips', event)"></div>
+        
+        <div class="zone" id="z-neck" onclick="handleTap('neck', event)"></div>
+        <div class="zone" id="z-heart" onclick="handleTap('heart', event)"></div>
+        <div class="zone" id="z-belly" onclick="handleTap('belly', event)"></div>
+        
+        <div class="zone" id="z-hand-l" onclick="handleTap('hands', event)"></div>
+        <div class="zone" id="z-hand-r" onclick="handleTap('hands', event)"></div>
+        <div class="zone" id="z-hip-l" onclick="handleTap('hips', event)"></div>
+        <div class="zone" id="z-hip-r" onclick="handleTap('hips', event)"></div>
+        <div class="zone" id="z-toe-l" onclick="handleTap('toes', event)"></div>
+        <div class="zone" id="z-toe-r" onclick="handleTap('toes', event)"></div>
+
+        <div class="zone" id="z-secret" onclick="handleTap('secret', event)"></div>
+    </div>
+
+    <div id="win-overlay">
+        <div style="font-size: 4rem;">🧸❤️</div>
+        <div class="win-title">Happy Teddy Day!</div>
+        <div class="win-sub">You found every spot.<br>Now come here and get your real hug.</div>
+        <button class="win-btn" onclick="location.reload()">Claim Hug</button>
+    </div>
+
+    <script>
+        // --- VISUALS: FALLING PETALS ---
+        const sky = document.getElementById('sky-layer');
+        const colors = ['var(--petal-frost)', 'var(--ash-grey)', 'var(--light-blue)'];
+        
+        for(let i=0; i<40; i++) {
+            const p = document.createElement('div');
+            p.className = 'petal';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.width = Math.random() * 6 + 4 + 'px';
+            p.style.height = p.style.width;
+            p.style.background = colors[Math.floor(Math.random()*colors.length)];
+            p.style.animationDuration = Math.random() * 10 + 5 + 's';
+            p.style.animationDelay = Math.random() * 5 + 's';
+            sky.appendChild(p);
+        }
+
+        // --- CONTENT ---
+        const data = {
+            forehead: { title: "The Mind", text: "A soft kiss here to start. Pushing your hair back and looking deep into your eyes." },
+            eyes: { title: "The Soul", text: "Closing them with a gentle kiss. Trust me. I'm going to guide you tonight." },
+            nose: { title: "The Tease", text: "A playful bite. Or maybe just rubbing mine against yours... an Eskimo kiss before the real heat starts." },
+            lips: { title: "The Mouth", text: "Good choice. Prepare for 5 minutes of deep, slow kissing. I want to taste you." },
+            neck: { title: "The Canvas", text: "My favorite spot. I'm going to leave a mark right here that you'll have to hide tomorrow. 😈" },
+            heart: { title: "The Heart", text: "I'm already in there. Forever. But tonight, I want to make it race." },
+            hands: { title: "The Grip", text: "Interlocking fingers. Squeezing tight while I drive into you. 😈" },
+            hips: { title: "The Curves", text: "My hands gripping you here, pulling you onto me hard. There might be bruises tomorrow. 😈" },
+            belly: { title: "The Navel", text: "Drawing circles around your navel with my tongue... giving it a wet kiss and a lick... tell me how that feels? 😈" },
+            toes: { title: "The Feet", text: "I want to massage them until you relax completely... and then work my way up slowly." },
+            secret: { title: "The Honey", text: "I want to bury my face here and eat you until you shake... your thighs wrapping around my head, hands grabbing my hair. 😈" }
+        };
+
+        // --- STATE TRACKING ---
+        let visited = new Set();
+        let bubbleTimer;
+        const totalZones = 11; // forehead, eyes, nose, lips, neck, heart, hands, hips, belly, toes, secret
+
+        function handleTap(zone, event) {
+            // 1. Visual Ripple
+            const ripple = document.createElement('div');
+            ripple.className = 'pulse-effect';
+            ripple.style.left = (event.clientX - 10) + 'px';
+            ripple.style.top = (event.clientY - 10) + 'px';
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+
+            // 2. Haptic
+            if(navigator.vibrate) navigator.vibrate(20);
+
+            // 3. Track Progress
+            visited.add(zone);
+
+            // 4. Chat Bubble Logic
+            const bubble = document.getElementById('chat-bubble');
+            const bTitle = document.getElementById('sb-title');
+            const bText = document.getElementById('sb-text');
+            const content = data[zone];
+
+            bTitle.innerText = content.title;
+            bText.innerText = content.text;
+
+            bubble.classList.remove('visible');
+            void bubble.offsetWidth; // Reflow
+            bubble.classList.add('visible');
+
+            // 5. Auto Hide
+            clearTimeout(bubbleTimer);
+            bubbleTimer = setTimeout(() => {
+                bubble.classList.remove('visible');
+                checkWin(); // Check win only after reading
+            }, 6000);
+        }
+
+        function checkWin() {
+            if(visited.size >= totalZones) {
+                const win = document.getElementById('win-overlay');
+                win.style.display = 'flex';
+                setTimeout(() => win.classList.add('show'), 100);
+            }
+        }
+    </script>
+</body>
+</html>
