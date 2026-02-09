@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Teddy's Anatomy | Final</title>
+    <title>Teddy's Anatomy | Hug Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,500;1,800&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -50,7 +50,7 @@
         @keyframes floatText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         p.subtitle {
-            color: var(--cocoa-text); font-size: 0.75rem; letter-spacing: 3px;
+            color: var(--cocoa-text); font-size: 0.8rem; letter-spacing: 2px;
             margin-bottom: 40px; z-index: 10; text-transform: uppercase; font-weight: 600; opacity: 0.7;
         }
 
@@ -60,7 +60,6 @@
             width: 350px; 
             height: 350px; 
             z-index: 5;
-            /* Flex center to hold image */
             display: flex; align-items: center; justify-content: center;
         }
 
@@ -69,13 +68,12 @@
             width: 100%; height: 100%; 
             object-fit: contain;
             filter: drop-shadow(0 10px 20px rgba(176, 221, 238, 0.8));
-            pointer-events: none; /* Let clicks pass through to zones */
+            pointer-events: none;
         }
 
         /* --- CHAT BUBBLE (FIXED POSITION) --- */
         #chat-bubble {
             position: absolute; 
-            /* Start hidden slightly lower */
             top: -60px; left: 50%;
             transform: translate(-50%, 20px) scale(0.8);
             width: 300px;
@@ -91,7 +89,6 @@
         /* Visible State - Pops Up */
         #chat-bubble.visible { 
             opacity: 1; 
-            /* Moves UP above the bear */
             top: -140px; 
             transform: translate(-50%, 0) scale(1); 
         }
@@ -122,44 +119,28 @@
             
             /* 🔴 DEBUG MODE: Circles are visible. 
                Change to "transparent" when ready! */
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            /* background: rgba(255, 0, 0, 0.1); border: 1px solid rgba(255, 0, 0, 0.3); */
             
-            /* UNCOMMENT FOR PRODUCTION: */
-            /* background: transparent; border: none; */
+            /* FINAL MODE: */
+            background: transparent; border: none; 
         }
 
         /* --- COORDINATES (Calibrated) --- */
-        /* HEAD */
         #z-forehead { width: 30%; height: 15%; top: 10%; left: 35%; }
         #z-eye-l { width: 14%; height: 12%; top: 28%; left: 26%; }
         #z-eye-r { width: 14%; height: 12%; top: 28%; left: 60%; }
         #z-nose { width: 16%; height: 12%; top: 38%; left: 42%; }
         #z-lips { width: 14%; height: 8%; top: 50%; left: 43%; }
-        
-        /* NECK */
         #z-neck { width: 30%; height: 8%; top: 55%; left: 35%; }
-        
-        /* BOOBIES */
         #z-boob-l { width: 18%; height: 15%; top: 62%; left: 28%; }
         #z-boob-r { width: 18%; height: 15%; top: 62%; left: 54%; }
-        
-        /* NAVEL */
         #z-navel { width: 20%; height: 15%; top: 75%; left: 40%; }
-        
-        /* HANDS */
         #z-hand-l { width: 20%; height: 20%; top: 55%; left: 5%; }
         #z-hand-r { width: 20%; height: 20%; top: 55%; left: 75%; }
-        
-        /* HIPS */
         #z-hip-l { width: 15%; height: 15%; top: 72%; left: 18%; }
         #z-hip-r { width: 15%; height: 15%; top: 72%; left: 67%; }
-        
-        /* TOES */
         #z-toe-l { width: 18%; height: 15%; top: 82%; left: 16%; }
         #z-toe-r { width: 18%; height: 15%; top: 82%; left: 66%; }
-
-        /* SECRET SPOT */
         #z-secret { width: 16%; height: 10%; top: 88%; left: 42%; }
 
         /* --- WIN OVERLAY --- */
@@ -195,7 +176,7 @@
     <div id="sky-layer"></div>
 
     <h1>Teddy's Anatomy</h1>
-    <p class="subtitle">FIND ALL 11 ZONES...</p>
+    <p class="subtitle">Find all the spots for a hug...</p>
 
     <div id="bear-wrapper">
         <div id="chat-bubble">
@@ -220,6 +201,7 @@
         
         <div class="zone" id="z-hand-l" onclick="handleTap('hands', event)"></div>
         <div class="zone" id="z-hand-r" onclick="handleTap('hands', event)"></div>
+        
         <div class="zone" id="z-hip-l" onclick="handleTap('hips', event)"></div>
         <div class="zone" id="z-hip-r" onclick="handleTap('hips', event)"></div>
         
@@ -268,8 +250,11 @@
         };
 
         // --- GAME LOGIC ---
+        // 'visited' set will only store unique keys (e.g., 'hands' only once, even if both L and R clicked)
         let visited = new Set();
         let bubbleTimer;
+        
+        // Total unique categories = 11 (Forehead, Eyes, Nose, Lips, Neck, Boobs, Navel, Hands, Hips, Toes, Secret)
         const totalZones = 11; 
 
         function handleTap(zone, event) {
@@ -284,7 +269,7 @@
             // Haptic
             if(navigator.vibrate) navigator.vibrate(20);
 
-            // Track Progress
+            // Track Progress (Adding 'hands' multiple times doesn't increase size of Set)
             visited.add(zone);
 
             // Show Bubble
@@ -303,7 +288,7 @@
             clearTimeout(bubbleTimer);
             bubbleTimer = setTimeout(() => {
                 bubble.classList.remove('visible');
-                // Check Win Condition AFTER bubble hides
+                // Check Win Condition
                 if(visited.size >= totalZones) {
                     showWinScreen();
                 }
@@ -315,7 +300,6 @@
             win.style.display = 'flex';
             setTimeout(() => win.classList.add('show'), 100);
             
-            // Celebration confetti
             if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
         }
     </script>
